@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Miami Embassy</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', Helvetica, sans-serif;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+    padding: 20px;
+    background-image: url('images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+  }
+
+  /* DARK OVERLAY TO MAKE IMAGE 15% DARKER */
+  body::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.15);
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 850px;
+    position: relative;
+    z-index: 1;
+  }
+
+  h1 {
+    font-family: 'Anton', sans-serif;
+    font-size: 5rem;
+    margin: 0 0 0.02em 0;
+    font-weight: normal;
+    letter-spacing: 1px;
+  }
+
+  h2 {
+    font-family: 'Anton', sans-serif;
+    font-size: 3.2rem;
+    margin: 0 0 0.15em 0;
+    font-weight: normal;
+    letter-spacing: 1px;
+  }
+
+  p {
+    font-size: 1.4rem;
+    line-height: 1.3em;
+    margin: 1.2em 0;
+  }
+
+  .highlight { color: #FFD700; font-weight: 700; }
+  .bold { font-weight: 700; }
+  .headinggap { margin-top: 0.5em; margin-bottom: 0.1em; }
+  .tight { margin-top: 0.2em; margin-bottom: 0.1em; }
+  .medium { margin-top: 0.4em; margin-bottom: 0.2em; }
+  .wide { margin-top: 1.5em; margin-bottom: 1.5em; }
+
+  video { width: 100%; max-height: 450px; margin: 1.8em 0; }
+
+  .rsvp-info {
+    border: 3px solid #FFD700;
+    border-radius: 18px;
+    padding: 24px 22px;
+    margin-top: 2em;
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .rsvp-info p { margin: 0; }
+  .rsvp-top { margin-bottom: 0.2em; font-size: 1.5rem; }
+  .rsvp-sub { margin-bottom: 0.8em; font-size: 1.3rem; line-height: 1.4em; }
+
+  .rsvp-btn {
+    background-color: #1cf200;
+    color: #000000;
+    border: none;
+    padding: 0.6em 1.2em;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 2.6rem;
+    margin: 0.3em 0 0.3em 0;
+    font-weight: 700;
+    transition: transform 0.2s;
+  }
+
+  .rsvp-btn:hover { transform: scale(1.05); }
+
+  .rsvp-bottom { margin-top: 0.25em; font-size: 1.05rem; line-height: 1.3em; }
+
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content {
+    background-color: #010d25;
+    border: 3px solid #FFD700;
+    border-radius: 25px;
+    padding: 35px;
+    max-width: 480px;
+    width: 90%;
+    color: white;
+    text-align: left;
+  }
+
+  .modal-content h3 {
+    font-family: 'Anton', sans-serif;
+    font-size: 1.8rem;
+    margin-top: 0.2em; margin-bottom: 1.2em;
+    font-weight: normal;
+  }
+
+  .modal-content label { display: block; margin-top: 5px; font-weight: 600; }
+  .modal-content input, .modal-content select {
+    width: 100%; padding: 8px; margin-top: 5px;
+    border-radius: 5px; border: 1px solid #FFD700;
+    background-color: #010d25; color: white;
+  }
+
+  .modal-content button {
+    margin-top: 15px; width: 100%; padding: 14px;
+    border-radius: 12px; border: none; background-color: #FFD700;
+    color: #010d25; font-size: 1.2rem; cursor: pointer; font-weight: 700;
+  }
+
+  .close-btn { float: right; cursor: pointer; font-size: 1.3rem; }
+
+  /* THANKS POPUP */
+  #thanksPopup {
+    display:none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #FFD700;
+    border: 3px solid #010d25;
+    border-radius: 25px;
+    padding: 2em 3em;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #010d25;
+    z-index: 20;
+    text-align:center;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div style="margin-bottom:15px;">
+    <img src="logo.png" alt="Logo" style="height:90px; object-fit:contain;">
+  </div>
+
+  <h1>Miami Embassy</h1>
+  <h2>A Leadership & Self Discovery Hub</h2>
+
+  <p class="headinggap"><span class="bold">Discover</span> your unique gifts.</p>
+  <p class="tight">Find your <span class="highlight">purpose</span> and calling.</p>
+  <p class="tight">Learn to <span class="bold">impact society</span> by reconnecting to your <span class="highlight">Source.</span></p>
+
+  <video controls>
+    <source src="video.mp4" type="video/mp4">
+  </video>
+
+  <p class="tight"><span class="bold">Everyone</span> is welcome.</p>
+  <p class="medium">Reconnect your identity to your mission and step into <span class="highlight">leadership.</span></p>
+  <p class="tight">Engage with those committed to <span class="bold">growth</span> and <span class="highlight">impact.</span></p>
+  <p class="wide">Discover practical tools to live fully in every area of life.</p>
+  <p class="medium"><span class="bold">Seats are extremely limited</span>. This is a private gathering for men ready to move.</p>
+
+  <div class="rsvp-info">
+
+    <p class="rsvp-top"><span class="bold">Secure your seat with serious men.</span></p>
+    <p class="rsvp-sub">
+      This room is for builders. For men who execute.
+      <span class="highlight">Spots are intentionally limited.</span>
+    </p>
+
+    <button class="rsvp-btn" onclick="openModal()">CLAIM YOUR SEAT</button>
+
+    <p class="rsvp-bottom"><span class="bold">No hype. No sales.</span></p>
+    <p class="rsvp-bottom">Just alignment, strategy, and real connection.</p>
+
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="rsvpModal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <h3>Confirm your place in the room</h3>
+
+    <form id="rsvpForm" action="https://formspree.io/f/xdalgrao" method="POST">
+      <label for="fname">First Name *</label>
+      <input type="text" id="fname" name="First Name" required>
+
+      <label for="lname">Last Name *</label>
+      <input type="text" id="lname" name="Last Name" required>
+
+      <label for="email">Email *</label>
+      <input type="email" id="email" name="Email" required>
+
+      <label for="phone">Phone *</label>
+      <input type="tel" id="phone" name="Phone">
+
+      <label for="guests">Bringing guests?</label>
+      <select id="guests" name="Guests">
+        <option value="No">No</option>
+        <option value="Yes">Yes</option>
+      </select>
+
+      <button type="submit">CLAIM YOUR SEAT</button>
+    </form>
+  </div>
+</div>
+
+<!-- THANKS POPUP -->
+<div id="thanksPopup">Thanks, you're registered!</div>
+
+<script>
+  function openModal() {
+    document.getElementById('rsvpModal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('rsvpModal').style.display = 'none';
+  }
+
+  window.onclick = function(event) {
+    if (event.target == document.getElementById('rsvpModal')) {
+      closeModal();
+    }
+  }
+
+  // AJAX Formspree Submission
+  const form = document.getElementById('rsvpForm');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    }).then(response => {
+      if (response.ok) {
+        // Show thanks popup
+        const popup = document.getElementById('thanksPopup');
+        popup.style.display = 'block';
+        setTimeout(() => { popup.style.display = 'none'; }, 3000);
+
+        // Close modal
+        closeModal();
+
+        // Clear form
+        form.reset();
+      } else {
+        response.json().then(data => {
+          alert("Oops! Something went wrong. Try again.");
+        });
+      }
+    }).catch(error => {
+      alert("Oops! Something went wrong. Try again.");
+      console.error(error);
+    });
+  });
+</script>
+
+</body>
+</html>
