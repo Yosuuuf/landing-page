@@ -32,11 +32,7 @@
     z-index: 0;
   }
 
-  .container {
-    max-width: 850px;
-    position: relative;
-    z-index: 1;
-  }
+  .container { max-width: 850px; position: relative; z-index: 1; }
 
   h1 { font-family: 'Anton', sans-serif; font-size: 5rem; margin: 0 0 0.02em 0; font-weight: normal; letter-spacing: 1px; }
   h2 { font-family: 'Anton', sans-serif; font-size: 3.2rem; margin: 0 0 0.15em 0; font-weight: normal; letter-spacing: 1px; }
@@ -70,20 +66,8 @@
 
   #thanksPopup { display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #FFD700; border: 3px solid #010d25; border-radius: 25px; padding: 2em 3em; font-size: 1.8rem; font-weight: 700; color: #010d25; z-index: 20; text-align:center; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
 
-  @media screen and (max-width: 768px) {
-    h1 { font-size: 3rem; line-height: 1.1em; }
-    h2 { font-size: 2rem; line-height: 1.2em; }
-    p { font-size: 1rem; line-height: 1.3em; }
-    .rsvp-btn { font-size: 1.8rem; padding: 0.5em 1em; }
-    .container { padding: 15px; }
-    video { max-height: 250px; }
-  }
-
-  @media screen and (max-width: 480px) {
-    h1 { font-size: 2.4rem; }
-    h2 { font-size: 1.6rem; }
-    .rsvp-btn { font-size: 1.5rem; padding: 0.4em 0.8em; }
-  }
+  @media screen and (max-width: 768px) { h1 { font-size: 3rem; line-height: 1.1em; } h2 { font-size: 2rem; line-height: 1.2em; } p { font-size: 1rem; line-height: 1.3em; } .rsvp-btn { font-size: 1.8rem; padding: 0.5em 1em; } .container { padding: 15px; } video { max-height: 250px; } }
+  @media screen and (max-width: 480px) { h1 { font-size: 2.4rem; } h2 { font-size: 1.6rem; } .rsvp-btn { font-size: 1.5rem; padding: 0.4em 0.8em; } }
 </style>
 </head>
 <body>
@@ -101,10 +85,8 @@
   <p class="tight">Find your <span class="highlight">purpose</span> and calling.</p>
   <p class="tight">Learn to <span class="bold">impact society</span> by reconnecting to your <span class="highlight">Source.</span></p>
 
-  <!-- CLOUDINARY VIDEO -->
   <video autoplay muted loop playsinline controls>
     <source src="https://res.cloudinary.com/dlsax19al/video/upload/v1771226590/miami_embassy1111_1_tnh7uk.mp4" type="video/mp4">
-    Your browser does not support HTML5 video.
   </video>
 
   <p class="tight"><span class="bold">Everyone</span> is welcome.</p>
@@ -115,10 +97,7 @@
 
   <div class="rsvp-info">
     <p class="rsvp-top"><span class="bold">Secure your seat with serious men.</span></p>
-    <p class="rsvp-sub">
-      This room is for builders. For men who execute.
-      <span class="highlight">Spots are intentionally limited.</span>
-    </p>
+    <p class="rsvp-sub">This room is for builders. For men who execute. <span class="highlight">Spots are intentionally limited.</span></p>
 
     <button class="rsvp-btn" onclick="openModal()">CLAIM YOUR SEAT</button>
 
@@ -128,13 +107,17 @@
 
 </div>
 
+<!-- Hidden iframe for form submission -->
+<iframe name="hidden_iframe" style="display:none;"></iframe>
+
 <!-- MODAL -->
 <div class="modal" id="rsvpModal">
   <div class="modal-content">
     <span class="close-btn" onclick="closeModal()">&times;</span>
     <h3>Confirm your place in the room</h3>
 
-    <form id="rsvpForm">
+    <!-- FORM now submits directly via iframe -->
+    <form id="rsvpForm" action="https://script.google.com/macros/s/AKfycbznGWyruFZLdojHC3KbEWOfdEPwy8lH3TAaFF43NtfXsEmoK41zMU9Dry3x7yHmH4wY/exec" method="POST" target="hidden_iframe" onsubmit="showThanksPopup()">
       <label for="fname">First Name *</label>
       <input type="text" id="fname" name="firstName" required>
 
@@ -171,66 +154,43 @@
 <div id="thanksPopup">Thanks, you're registered!</div>
 
 <script>
-  function openModal() { document.getElementById('rsvpModal').style.display = 'flex'; }
-  function closeModal() { document.getElementById('rsvpModal').style.display = 'none'; }
+function openModal() { document.getElementById('rsvpModal').style.display = 'flex'; }
+function closeModal() { document.getElementById('rsvpModal').style.display = 'none'; }
 
-  window.onclick = function(event) {
-    if (event.target == document.getElementById('rsvpModal')) { closeModal(); }
+window.onclick = function(event) {
+  if (event.target == document.getElementById('rsvpModal')) { closeModal(); }
+}
+
+// Guest selection logic
+const guestsSelect = document.getElementById('guests');
+const guestCountLabel = document.getElementById('guestCountLabel');
+const guestCountSelect = document.getElementById('guestCount');
+
+guestsSelect.addEventListener('change', function() {
+  if (this.value === 'Yes') {
+    guestCountLabel.style.display = 'block';
+    guestCountSelect.style.display = 'block';
+  } else {
+    guestCountLabel.style.display = 'none';
+    guestCountSelect.style.display = 'none';
+    guestCountSelect.value = '0';
   }
+});
 
-  const guestsSelect = document.getElementById('guests');
-  const guestCountLabel = document.getElementById('guestCountLabel');
-  const guestCountSelect = document.getElementById('guestCount');
+// Show personalized thank-you popup
+function showThanksPopup() {
+  const firstName = document.getElementById('fname').value;
+  const popup = document.getElementById('thanksPopup');
+  popup.textContent = `Thanks ${firstName}, you're registered!`;
+  popup.style.display = 'block';
+  setTimeout(() => { popup.style.display = 'none'; }, 3000);
 
-  guestsSelect.addEventListener('change', function() {
-    if (this.value === 'Yes') {
-      guestCountLabel.style.display = 'block';
-      guestCountSelect.style.display = 'block';
-    } else {
-      guestCountLabel.style.display = 'none';
-      guestCountSelect.style.display = 'none';
-      guestCountSelect.value = '0';
-    }
-  });
-
-  const form = document.getElementById('rsvpForm');
-  form.addEventListener('submit', async function(e){
-    e.preventDefault();
-
-    const formData = {
-      firstName: document.getElementById('fname').value,
-      lastName: document.getElementById('lname').value,
-      email: document.getElementById('email').value,
-      phone: document.getElementById('phone').value,
-      bringingGuests: document.getElementById('guests').value,
-      numberOfGuests: document.getElementById('guestCount').value || 0
-    };
-
-    try {
-      await fetch("https://script.google.com/macros/s/AKfycbydQa2Oyw0y4u2NMmkQjJ2n1eR5QUoQSWIutsmm5CQ6C_pOpOeWNhyG1G2khk_aPK6p/exec", {
-        method: "POST",
-        body: JSON.stringify(formData),
-        headers: { "Content-Type": "application/json" }
-      });
-
-      // Personalized success message
-      const popup = document.getElementById('thanksPopup');
-      popup.textContent = `Thanks ${formData.firstName}, you're registered!`;
-      popup.style.display = 'block';
-      setTimeout(() => { popup.style.display = 'none'; }, 3000);
-
-      closeModal();
-      form.reset();
-      guestCountLabel.style.display = 'none';
-      guestCountSelect.style.display = 'none';
-      guestCountSelect.value = '0';
-
-    } catch(err) {
-      console.error(err);
-      alert("Oops! Something went wrong. Try again.");
-    }
-  });
+  closeModal();
+  document.getElementById('rsvpForm').reset();
+  guestCountLabel.style.display = 'none';
+  guestCountSelect.style.display = 'none';
+  guestCountSelect.value = '0';
+}
 </script>
 </body>
 </html>
-
