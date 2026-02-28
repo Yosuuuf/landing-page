@@ -175,31 +175,35 @@ guestsSelect.addEventListener('change', function() {
     guestCountLabel.style.height = "0";
     guestCountSelect.style.opacity = 0;
     guestCountSelect.style.height = "0";
-    guestCountSelect.value = "0";
   }
 });
 
 function showThanksPopup() {
-  if (guestsSelect.value === "No") guestCountSelect.value = "0";
 
   const firstName = document.querySelector('[name="firstName"]').value;
   const popup = document.getElementById('thanksPopup');
+
   popup.textContent = `Thanks ${firstName}, you're registered!`;
   popup.style.display = 'block';
-  setTimeout(() => { popup.style.display = 'none'; }, 3000);
 
+  // Close modal immediately
   closeModal();
 
-  guestCountLabel.style.opacity = 0;
-  guestCountLabel.style.height = "0";
-  guestCountSelect.style.opacity = 0;
-  guestCountSelect.style.height = "0";
-  guestCountSelect.value = '0';
+  // Wait before resetting form (so submission finishes first)
+  setTimeout(() => {
+    popup.style.display = 'none';
+    document.getElementById('rsvpForm').reset();
+    
+    guestCountLabel.style.opacity = 0;
+    guestCountLabel.style.height = "0";
+    guestCountSelect.style.opacity = 0;
+    guestCountSelect.style.height = "0";
+  }, 1000);
 
-  // Allow form to submit to hidden iframe
-  return true;
+  return true; // allow form to submit
 }
 </script>
 </body>
 </html>
+
 
