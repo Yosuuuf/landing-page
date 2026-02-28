@@ -107,7 +107,6 @@
 
 </div>
 
-<!-- Hidden iframe for form submission -->
 <iframe name="hidden_iframe" style="display:none;"></iframe>
 
 <!-- MODAL -->
@@ -116,35 +115,34 @@
     <span class="close-btn" onclick="closeModal()">&times;</span>
     <h3>Confirm your place in the room</h3>
 
-    <!-- FORM now submits directly via iframe -->
-    <form id="rsvpForm" action="https://script.google.com/macros/s/AKfycbzZ3tF_EznEmBlRvFX_cfOSsU2GA0XqpmcE6t5NMg8jFcVZhuF40feWfkH6sM0cFHCA/exec" method="POST" target="hidden_iframe" onsubmit="showThanksPopup()">
-      <label for="fname">First Name *</label>
-      <input type="text" id="fname" name="firstName" required>
+    <form id="rsvpForm" action="https://script.google.com/macros/s/AKfycbyGueTKBakxw0b4YT3e221Zzbk3Lyz06kAkAXrmgrPa3V6E9kpPqHQweRtz6PpBpTLL/exec" method="POST" target="hidden_iframe" onsubmit="return showThanksPopup()">
+      <label>First Name *</label>
+      <input type="text" name="firstName" required>
 
-      <label for="lname">Last Name *</label>
-      <input type="text" id="lname" name="lastName" required>
+      <label>Last Name *</label>
+      <input type="text" name="lastName" required>
 
-      <label for="email">Email *</label>
-      <input type="email" id="email" name="email" required>
+      <label>Email *</label>
+      <input type="email" name="email" required>
 
-      <label for="phone">Phone *</label>
-      <input type="tel" id="phone" name="phone">
+      <label>Phone</label>
+      <input type="tel" name="phone">
 
-      <label for="guests">Bringing guests?</label>
+      <label>Bringing guests?</label>
       <select id="guests" name="bringingGuests">
         <option value="No" selected>No</option>
         <option value="Yes">Yes</option>
       </select>
 
-<label for="guestCount" id="guestCountLabel" style="display:none; margin-top:10px;">How many guests?</label>
-<select id="guestCount" name="numberOfGuests" style="display:none; margin-top:5px;">
-  <option value="0">0</option>
-  <option value="1">1</option>
-  <option value="2">2</option>
-  <option value="3">3</option>
-  <option value="4">4</option>
-  <option value="5">5</option>
-</select>
+      <label id="guestCountLabel" style="opacity:0; height:0; overflow:hidden;">How many guests?</label>
+      <select id="guestCount" name="numberOfGuests" style="opacity:0; height:0; overflow:hidden;">
+        <option value="0" selected>0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
 
       <button type="submit">CLAIM YOUR SEAT</button>
     </form>
@@ -161,44 +159,46 @@ window.onclick = function(event) {
   if (event.target == document.getElementById('rsvpModal')) { closeModal(); }
 }
 
-// Guest selection logic
 const guestsSelect = document.getElementById('guests');
 const guestCountLabel = document.getElementById('guestCountLabel');
 const guestCountSelect = document.getElementById('guestCount');
 
 guestsSelect.addEventListener('change', function() {
   if (this.value === 'Yes') {
-    guestCountLabel.style.display = 'block';
-    guestCountSelect.style.display = 'block';
-    // set a default to 1 if user hasn't selected yet
+    guestCountLabel.style.opacity = 1;
+    guestCountLabel.style.height = "auto";
+    guestCountSelect.style.opacity = 1;
+    guestCountSelect.style.height = "auto";
     if (guestCountSelect.value === "0") guestCountSelect.value = "1";
   } else {
-    guestCountLabel.style.display = 'none';
-    guestCountSelect.style.display = 'none';
+    guestCountLabel.style.opacity = 0;
+    guestCountLabel.style.height = "0";
+    guestCountSelect.style.opacity = 0;
+    guestCountSelect.style.height = "0";
     guestCountSelect.value = "0";
   }
 });
 
-// Show personalized thank-you popup
 function showThanksPopup() {
-  // Make sure numberOfGuests is correct
-  if (guestsSelect.value === "No") {
-    guestCountSelect.value = "0";
-  }
+  if (guestsSelect.value === "No") guestCountSelect.value = "0";
 
-  const firstName = document.getElementById('fname').value;
+  const firstName = document.querySelector('[name="firstName"]').value;
   const popup = document.getElementById('thanksPopup');
   popup.textContent = `Thanks ${firstName}, you're registered!`;
   popup.style.display = 'block';
   setTimeout(() => { popup.style.display = 'none'; }, 3000);
 
   closeModal();
-  document.getElementById('rsvpForm').reset();
-  guestCountLabel.style.display = 'none';
-  guestCountSelect.style.display = 'none';
+
+  guestCountLabel.style.opacity = 0;
+  guestCountLabel.style.height = "0";
+  guestCountSelect.style.opacity = 0;
+  guestCountSelect.style.height = "0";
   guestCountSelect.value = '0';
+
+  // Allow form to submit to hidden iframe
+  return true;
 }
 </script>
 </body>
 </html>
-
